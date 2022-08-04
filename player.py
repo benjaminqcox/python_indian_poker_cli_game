@@ -13,7 +13,7 @@ class Player:
             for card in cards:
                 i+=1
                 display_card = card.show()
-                if row == 'face_down' or (self.is_bot and row == 'hand'):
+                if row == 'face_down':
                     display_card = 'X'
                 print(f'[{i}]: {display_card} ', end=' ')
             print()

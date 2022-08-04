@@ -87,8 +87,15 @@ class Game:
                 matching_card_indexes.append(card_index)
         return matching_card_indexes
 
-    def choose_bot_card_indexes(self, current_player, row):
-        return self.all_indexes_matching_chosen_card(current_player, row, self.first_legal_card(current_player, row))
+    def choose_bot_card_indexes(self, current_player, row, legal_choice=True):
+        if legal_choice:
+            return self.all_indexes_matching_chosen_card(current_player, row, self.first_legal_card(current_player, row))
+        else:
+            card_choice = [randint(0, len(current_player.cards[row]))]
+            if row == 'face_up':
+                card_choice = self.all_indexes_matching_chosen_card(current_player, row, current_player.cards[row][card_choice[0]])
+        return card_choice
+
 
     def choose_cards(self, current_player) -> Tuple[str, List[int]]:
         playable_row = current_player.get_playable_row()
@@ -196,7 +203,10 @@ class Game:
             if row == 'hand':
                 current_player.cards['hand'].extend(self.pickup_centre())
             else:
-                row, card_indexes = self.choose_cards(current_player)
+                if current_player.is_bot:
+                    card_indexes = self.choose_bot_card_indexes(current_player, row, legal_choice=False)
+                else:
+                    row, card_indexes = self.choose_cards(current_player) # problem is hapenning in this else
                 if row == 'face_up':
                     self.play_face_up_then_pick_up(current_player, card_indexes)
                 elif row == 'face_down':
@@ -204,6 +214,9 @@ class Game:
 
 
     def play_game(self):
+        # TODO: Add cross OS compatibility (os.cls() does not work on Linux)
+        # Game doesn't always end on the bots final card, they play theres then wait for me to play mine, then it says they win.
+        # Not too much of an issue but it could mean if it's a close game, the wrong person wins
         # make players, deck, shuffle, deal cards, place card in centre then randomise who starts
         players = [self.player, self.bot]
         rows_to_sort = ['face_up', 'hand']
