@@ -1,8 +1,9 @@
 from card import Card
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, is_bot=False):
         self.name = name
         self.cards = {'hand': [], 'face_up': [], 'face_down': []}
+        self.is_bot = is_bot
 
     def show_cards(self):
         print(f'Player: {self.name}')
@@ -12,7 +13,7 @@ class Player:
             for card in cards:
                 i+=1
                 display_card = card.show()
-                if row == 'face_down':
+                if row == 'face_down' or (self.is_bot and row == 'hand'):
                     display_card = 'X'
                 print(f'[{i}]: {display_card} ', end=' ')
             print()
