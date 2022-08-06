@@ -242,9 +242,9 @@ class Game:
                 self.ten_rule()
                 i = change_player(i)
             i = change_player(i)
-            os.system('cls')
+            os.system('cls||clear')
 
-        os.system('cls')
+        os.system('cls||clear')
         self.show_table()
         print(f'#####################   {players[i].name} wins   #####################')
         sys.exit()
